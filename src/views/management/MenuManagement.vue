@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 interface MenuRecord {
   id: number
@@ -55,36 +55,34 @@ interface MenuRecord {
   order: number
 }
 
-interface ViewState {
-  menus: MenuRecord[]
-  currentPage: number
-  pageSize: number
-}
-
 export default defineComponent({
   name: 'MenuManagement',
-  data(): ViewState {
-    return {
-      menus: [
-        { id: 1, label: 'Dashboard', route: '/dashboard', icon: 'house', order: 1 },
-        { id: 2, label: 'Users', route: '/users', icon: 'users', order: 2 },
-        { id: 3, label: 'Roles', route: '/roles', icon: 'user-shield', order: 3 },
-        { id: 4, label: 'Reports', route: '/reports', icon: 'chart-line', order: 4 },
-      ],
-      currentPage: 1,
-      pageSize: 5,
+  setup() {
+    const menus = ref<MenuRecord[]>([
+      { id: 1, label: 'Dashboard', route: '/dashboard', icon: 'house', order: 1 },
+      { id: 2, label: 'Users', route: '/users', icon: 'users', order: 2 },
+      { id: 3, label: 'Roles', route: '/roles', icon: 'user-shield', order: 3 },
+      { id: 4, label: 'Reports', route: '/reports', icon: 'chart-line', order: 4 },
+    ])
+    const currentPage = ref(1)
+    const pageSize = ref(5)
+
+    const pagedMenus = computed<MenuRecord[]>(() => {
+      const start = (currentPage.value - 1) * pageSize.value
+      return menus.value.slice(start, start + pageSize.value)
+    })
+
+    const handlePageChange = (page: number): void => {
+      currentPage.value = page
     }
-  },
-  computed: {
-    pagedMenus(): MenuRecord[] {
-      const start = (this.currentPage - 1) * this.pageSize
-      return this.menus.slice(start, start + this.pageSize)
-    },
-  },
-  methods: {
-    handlePageChange(page: number): void {
-      this.currentPage = page
-    },
+
+    return {
+      menus,
+      currentPage,
+      pageSize,
+      pagedMenus,
+      handlePageChange,
+    }
   },
 })
 </script>

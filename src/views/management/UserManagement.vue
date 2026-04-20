@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 interface UserRecord {
   id: number
@@ -55,38 +55,36 @@ interface UserRecord {
   status: 'Active' | 'Inactive'
 }
 
-interface ViewState {
-  users: UserRecord[]
-  currentPage: number
-  pageSize: number
-}
-
 export default defineComponent({
   name: 'UserManagement',
-  data(): ViewState {
-    return {
-      users: [
-        { id: 1, name: 'Nadia Putri', email: 'nadia@company.com', role: 'Admin', status: 'Active' },
-        { id: 2, name: 'Rafi Akbar', email: 'rafi@company.com', role: 'Editor', status: 'Active' },
-        { id: 3, name: 'Sinta K.', email: 'sinta@company.com', role: 'Viewer', status: 'Inactive' },
-        { id: 4, name: 'Kevin Hartono', email: 'kevin@company.com', role: 'Editor', status: 'Active' },
-        { id: 5, name: 'Rina Adelia', email: 'rina@company.com', role: 'Admin', status: 'Active' },
-        { id: 6, name: 'Dimas Yoga', email: 'dimas@company.com', role: 'Viewer', status: 'Inactive' },
-      ],
-      currentPage: 1,
-      pageSize: 5,
+  setup() {
+    const users = ref<UserRecord[]>([
+      { id: 1, name: 'Nadia Putri', email: 'nadia@company.com', role: 'Admin', status: 'Active' },
+      { id: 2, name: 'Rafi Akbar', email: 'rafi@company.com', role: 'Editor', status: 'Active' },
+      { id: 3, name: 'Sinta K.', email: 'sinta@company.com', role: 'Viewer', status: 'Inactive' },
+      { id: 4, name: 'Kevin Hartono', email: 'kevin@company.com', role: 'Editor', status: 'Active' },
+      { id: 5, name: 'Rina Adelia', email: 'rina@company.com', role: 'Admin', status: 'Active' },
+      { id: 6, name: 'Dimas Yoga', email: 'dimas@company.com', role: 'Viewer', status: 'Inactive' },
+    ])
+    const currentPage = ref(1)
+    const pageSize = ref(5)
+
+    const pagedUsers = computed<UserRecord[]>(() => {
+      const start = (currentPage.value - 1) * pageSize.value
+      return users.value.slice(start, start + pageSize.value)
+    })
+
+    const handlePageChange = (page: number): void => {
+      currentPage.value = page
     }
-  },
-  computed: {
-    pagedUsers(): UserRecord[] {
-      const start = (this.currentPage - 1) * this.pageSize
-      return this.users.slice(start, start + this.pageSize)
-    },
-  },
-  methods: {
-    handlePageChange(page: number): void {
-      this.currentPage = page
-    },
+
+    return {
+      users,
+      currentPage,
+      pageSize,
+      pagedUsers,
+      handlePageChange,
+    }
   },
 })
 </script>

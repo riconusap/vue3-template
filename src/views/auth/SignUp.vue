@@ -110,21 +110,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, reactive, ref, watch } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 interface SignUpForm {
   name: string
   email: string
   password: string
   confirmPassword: string
-}
-
-interface SignUpViewState {
-  form: SignUpForm
-  isSubmitting: boolean
-  errorMessage: string
-  rules: FormRules<SignUpForm>
 }
 
 interface PasswordCheck {
@@ -134,153 +128,156 @@ interface PasswordCheck {
 
 export default defineComponent({
   name: 'SignUp',
-  data(): SignUpViewState {
-    return {
-      form: {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      },
-      isSubmitting: false,
-      errorMessage: '',
-      rules: {
-        name: [
-          { required: true, message: 'Full name is required', trigger: 'blur' },
-          { min: 3, message: 'Full name must be at least 3 characters', trigger: 'blur' },
-        ],
-        email: [
-          { required: true, message: 'Email is required', trigger: 'blur' },
-          { type: 'email', message: 'Please enter a valid email', trigger: ['blur', 'change'] },
-        ],
-        password: [
-          { required: true, message: 'Password is required', trigger: 'blur' },
-          {
-            validator: (_rule, value: string, callback): void => {
-              const password = value ?? ''
-              const missingCriteria: string[] = []
+  setup() {
+    const router = useRouter()
+    const signUpFormRef = ref<FormInstance>()
+    const isSubmitting = ref(false)
+    const errorMessage = ref('')
 
-              if (password.length < 8) {
-                missingCriteria.push('8+ characters')
-              }
-              if (!/[A-Z]/.test(password)) {
-                missingCriteria.push('one uppercase letter')
-              }
-              if (!/\d/.test(password)) {
-                missingCriteria.push('one number')
-              }
-              if (!/[^A-Za-z0-9]/.test(password)) {
-                missingCriteria.push('one symbol')
-              }
+    const form = reactive<SignUpForm>({
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    })
 
-              if (missingCriteria.length > 0) {
-                callback(new Error(`Password must include ${missingCriteria.join(', ')}`))
-                return
-              }
+    const rules: FormRules<SignUpForm> = {
+      name: [
+        { required: true, message: 'Full name is required', trigger: 'blur' },
+        { min: 3, message: 'Full name must be at least 3 characters', trigger: 'blur' },
+      ],
+      email: [
+        { required: true, message: 'Email is required', trigger: 'blur' },
+        { type: 'email', message: 'Please enter a valid email', trigger: ['blur', 'change'] },
+      ],
+      password: [
+        { required: true, message: 'Password is required', trigger: 'blur' },
+        {
+          validator: (_rule, value: string, callback): void => {
+            const password = value ?? ''
+            const missingCriteria: string[] = []
 
-              callback()
-            },
-            trigger: 'blur',
+            if (password.length < 8) {
+              missingCriteria.push('8+ characters')
+            }
+            if (!/[A-Z]/.test(password)) {
+              missingCriteria.push('one uppercase letter')
+            }
+            if (!/\d/.test(password)) {
+              missingCriteria.push('one number')
+            }
+            if (!/[^A-Za-z0-9]/.test(password)) {
+              missingCriteria.push('one symbol')
+            }
+
+            if (missingCriteria.length > 0) {
+              callback(new Error(`Password must include ${missingCriteria.join(', ')}`))
+              return
+            }
+
+            callback()
           },
-        ],
-        confirmPassword: [
-          { required: true, message: 'Please confirm your password', trigger: 'blur' },
-          {
-            validator: (_rule, value: string, callback): void => {
-              const vm = this as unknown as { form: SignUpForm }
-              if (value !== vm.form.password) {
-                callback(new Error('Password confirmation does not match'))
-                return
-              }
-              callback()
-            },
-            trigger: ['blur', 'change'],
+          trigger: 'blur',
+        },
+      ],
+      confirmPassword: [
+        { required: true, message: 'Please confirm your password', trigger: 'blur' },
+        {
+          validator: (_rule, value: string, callback): void => {
+            if (value !== form.password) {
+              callback(new Error('Password confirmation does not match'))
+              return
+            }
+            callback()
           },
-        ],
-      },
+          trigger: ['blur', 'change'],
+        },
+      ],
     }
-  },
-  watch: {
-    'form.name'() {
-      this.errorMessage = ''
-    },
-    'form.email'() {
-      this.errorMessage = ''
-    },
-    'form.password'() {
-      this.errorMessage = ''
-    },
-    'form.confirmPassword'() {
-      this.errorMessage = ''
-    },
-  },
-  computed: {
-    passwordChecks(): PasswordCheck[] {
-      const password = this.form.password
+
+    watch(
+      () => [form.name, form.email, form.password, form.confirmPassword],
+      () => {
+        errorMessage.value = ''
+      },
+    )
+
+    const passwordChecks = computed<PasswordCheck[]>(() => {
+      const password = form.password
       return [
         { label: '8+ chars', passed: password.length >= 8 },
         { label: 'Uppercase', passed: /[A-Z]/.test(password) },
         { label: 'Number', passed: /\d/.test(password) },
         { label: 'Symbol', passed: /[^A-Za-z0-9]/.test(password) },
       ]
-    },
-    strengthScore(): number {
-      return this.passwordChecks.filter((check) => check.passed).length
-    },
-    strengthPercent(): number {
-      return (this.strengthScore / 4) * 100
-    },
-    strengthLabel(): string {
-      if (!this.form.password) {
+    })
+
+    const strengthScore = computed<number>(() => passwordChecks.value.filter((check) => check.passed).length)
+    const strengthPercent = computed<number>(() => (strengthScore.value / 4) * 100)
+    const strengthLabel = computed<string>(() => {
+      if (!form.password) {
         return 'Not set'
       }
-      if (this.strengthScore <= 1) {
+      if (strengthScore.value <= 1) {
         return 'Weak'
       }
-      if (this.strengthScore === 2) {
+      if (strengthScore.value === 2) {
         return 'Fair'
       }
-      if (this.strengthScore === 3) {
+      if (strengthScore.value === 3) {
         return 'Good'
       }
       return 'Strong'
-    },
-    strengthClass(): string {
-      if (!this.form.password) {
+    })
+    const strengthClass = computed<string>(() => {
+      if (!form.password) {
         return 'strength-idle'
       }
-      if (this.strengthScore <= 1) {
+      if (strengthScore.value <= 1) {
         return 'strength-weak'
       }
-      if (this.strengthScore === 2) {
+      if (strengthScore.value === 2) {
         return 'strength-fair'
       }
-      if (this.strengthScore === 3) {
+      if (strengthScore.value === 3) {
         return 'strength-good'
       }
       return 'strength-strong'
-    },
-  },
-  methods: {
-    async onSubmit(): Promise<void> {
-      const formRef = this.$refs.signUpFormRef as FormInstance | undefined
+    })
+
+    const onSubmit = async (): Promise<void> => {
+      const formRef = signUpFormRef.value
       if (!formRef) {
         return
       }
 
       const isValid = await formRef.validate().catch(() => false)
       if (!isValid) {
-        this.errorMessage = 'Please complete the required fields correctly.'
+        errorMessage.value = 'Please complete the required fields correctly.'
         return
       }
 
-      this.isSubmitting = true
-      this.errorMessage = ''
+      isSubmitting.value = true
+      errorMessage.value = ''
 
       ElMessage.success('Account created. You can sign in now.')
-      this.isSubmitting = false
-      await this.$router.push('/auth/sign-in')
-    },
+      isSubmitting.value = false
+      await router.push('/auth/sign-in')
+    }
+
+    return {
+      signUpFormRef,
+      form,
+      isSubmitting,
+      errorMessage,
+      rules,
+      passwordChecks,
+      strengthScore,
+      strengthPercent,
+      strengthLabel,
+      strengthClass,
+      onSubmit,
+    }
   },
 })
 </script>

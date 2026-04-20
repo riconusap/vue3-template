@@ -85,8 +85,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, reactive, ref, watch } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 
 interface SignInForm {
@@ -95,73 +96,74 @@ interface SignInForm {
   rememberMe: boolean
 }
 
-interface SignInViewState {
-  form: SignInForm
-  isSubmitting: boolean
-  errorMessage: string
-  rules: FormRules<SignInForm>
-}
-
 export default defineComponent({
   name: 'SignIn',
-  data(): SignInViewState {
-    return {
-      form: {
-        email: 'admin@example.com',
-        password: 'password',
-        rememberMe: true,
-      },
-      isSubmitting: false,
-      errorMessage: '',
-      rules: {
-        email: [
-          { required: true, message: 'Email is required', trigger: 'blur' },
-          { type: 'email', message: 'Please enter a valid email', trigger: ['blur', 'change'] },
-        ],
-        password: [
-          { required: true, message: 'Password is required', trigger: 'blur' },
-          { min: 6, message: 'Password must be at least 6 characters', trigger: 'blur' },
-        ],
-      },
+  setup() {
+    const router = useRouter()
+    const authStore = useAuthStore()
+    const signInFormRef = ref<FormInstance>()
+    const isSubmitting = ref(false)
+    const errorMessage = ref('')
+
+    const form = reactive<SignInForm>({
+      email: 'admin@example.com',
+      password: 'password',
+      rememberMe: true,
+    })
+
+    const rules: FormRules<SignInForm> = {
+      email: [
+        { required: true, message: 'Email is required', trigger: 'blur' },
+        { type: 'email', message: 'Please enter a valid email', trigger: ['blur', 'change'] },
+      ],
+      password: [
+        { required: true, message: 'Password is required', trigger: 'blur' },
+        { min: 6, message: 'Password must be at least 6 characters', trigger: 'blur' },
+      ],
     }
-  },
-  watch: {
-    'form.email'() {
-      this.errorMessage = ''
-    },
-    'form.password'() {
-      this.errorMessage = ''
-    },
-  },
-  methods: {
-    async onSubmit(): Promise<void> {
-      const formRef = this.$refs.signInFormRef as FormInstance | undefined
+
+    watch(
+      () => [form.email, form.password],
+      () => {
+        errorMessage.value = ''
+      },
+    )
+
+    const onSubmit = async (): Promise<void> => {
+      const formRef = signInFormRef.value
       if (!formRef) {
         return
       }
 
       const isValid = await formRef.validate().catch(() => false)
       if (!isValid) {
-        this.errorMessage = 'Please review the highlighted fields before continuing.'
+        errorMessage.value = 'Please review the highlighted fields before continuing.'
         return
       }
 
-      this.isSubmitting = true
-      this.errorMessage = ''
+      isSubmitting.value = true
+      errorMessage.value = ''
 
-      const authStore = useAuthStore()
-
-      if (this.form.password !== 'password') {
-        this.isSubmitting = false
-        this.errorMessage = 'Incorrect credentials. For demo, use password: password'
+      if (form.password !== 'password') {
+        isSubmitting.value = false
+        errorMessage.value = 'Incorrect credentials. For demo, use password: password'
         return
       }
 
-      authStore.signIn(this.form)
+      authStore.signIn(form)
       ElMessage.success('Signed in successfully')
-      this.isSubmitting = false
-      await this.$router.push('/dashboard')
-    },
+      isSubmitting.value = false
+      await router.push('/dashboard')
+    }
+
+    return {
+      signInFormRef,
+      form,
+      isSubmitting,
+      errorMessage,
+      rules,
+      onSubmit,
+    }
   },
 })
 </script>

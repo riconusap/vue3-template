@@ -1,7 +1,7 @@
 <template>
   <header class="app-header">
     <div class="app-header-left">
-      <el-button circle @click="$emit('toggle-sidebar')">
+      <el-button circle @click="handleToggleSidebar">
         <font-awesome-icon :icon="['fas', 'bars']" />
       </el-button>
       <el-breadcrumb separator=">" class="header-breadcrumb">
@@ -26,7 +26,7 @@
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="$emit('sign-out')">Sign Out</el-dropdown-item>
+            <el-dropdown-item @click="handleSignOut">Sign Out</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -58,6 +58,20 @@ export default defineComponent({
       type: String,
       required: true,
     },
+  },
+  setup(_props, { emit }) {
+    const handleToggleSidebar = (): void => {
+      emit('toggle-sidebar')
+    }
+
+    const handleSignOut = (): void => {
+      emit('sign-out')
+    }
+
+    return {
+      handleToggleSidebar,
+      handleSignOut,
+    }
   },
 })
 </script>

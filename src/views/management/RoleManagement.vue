@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 interface RoleRecord {
   id: number
@@ -53,36 +53,34 @@ interface RoleRecord {
   users: number
 }
 
-interface ViewState {
-  roles: RoleRecord[]
-  currentPage: number
-  pageSize: number
-}
-
 export default defineComponent({
   name: 'RoleManagement',
-  data(): ViewState {
-    return {
-      roles: [
-        { id: 1, name: 'Super Admin', permissions: 'All Permissions', users: 2 },
-        { id: 2, name: 'Admin', permissions: 'User, Menu, Role Management', users: 6 },
-        { id: 3, name: 'Editor', permissions: 'Content Management', users: 10 },
-        { id: 4, name: 'Viewer', permissions: 'Read-only Access', users: 21 },
-      ],
-      currentPage: 1,
-      pageSize: 5,
+  setup() {
+    const roles = ref<RoleRecord[]>([
+      { id: 1, name: 'Super Admin', permissions: 'All Permissions', users: 2 },
+      { id: 2, name: 'Admin', permissions: 'User, Menu, Role Management', users: 6 },
+      { id: 3, name: 'Editor', permissions: 'Content Management', users: 10 },
+      { id: 4, name: 'Viewer', permissions: 'Read-only Access', users: 21 },
+    ])
+    const currentPage = ref(1)
+    const pageSize = ref(5)
+
+    const pagedRoles = computed<RoleRecord[]>(() => {
+      const start = (currentPage.value - 1) * pageSize.value
+      return roles.value.slice(start, start + pageSize.value)
+    })
+
+    const handlePageChange = (page: number): void => {
+      currentPage.value = page
     }
-  },
-  computed: {
-    pagedRoles(): RoleRecord[] {
-      const start = (this.currentPage - 1) * this.pageSize
-      return this.roles.slice(start, start + this.pageSize)
-    },
-  },
-  methods: {
-    handlePageChange(page: number): void {
-      this.currentPage = page
-    },
+
+    return {
+      roles,
+      currentPage,
+      pageSize,
+      pagedRoles,
+      handlePageChange,
+    }
   },
 })
 </script>

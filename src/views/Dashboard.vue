@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import type { ApexAxisChartSeries, ApexOptions } from 'apexcharts'
 
 interface SummaryCard {
@@ -29,55 +29,53 @@ interface SummaryCard {
   growth: string
 }
 
-interface DashboardState {
-  chartOptions: ApexOptions
-  chartSeries: ApexAxisChartSeries
-  summaryCards: SummaryCard[]
-}
-
 export default defineComponent({
   name: 'Dashboard',
-  data(): DashboardState {
-    return {
-      summaryCards: [
-        { title: 'Total Users', value: '1,284', growth: '+8.2% this month' },
-        { title: 'Active Sessions', value: '392', growth: '+3.6% today' },
-        { title: 'Revenue', value: '$24,300', growth: '+12.5% this month' },
-      ],
-      chartSeries: [
-        {
-          name: 'Visits',
-          data: [120, 140, 110, 180, 165, 210, 230],
-        },
-      ],
-      chartOptions: {
-        chart: {
-          toolbar: { show: false },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: 'smooth',
-          width: 3,
-        },
-        colors: ['#2F2FE4'],
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shadeIntensity: 1,
-            opacityFrom: 0.4,
-            opacityTo: 0.08,
-            stops: [0, 90, 100],
-          },
-        },
-        grid: {
-          borderColor: '#E9ECF8',
-        },
-        xaxis: {
-          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  setup() {
+    const summaryCards = ref<SummaryCard[]>([
+      { title: 'Total Users', value: '1,284', growth: '+8.2% this month' },
+      { title: 'Active Sessions', value: '392', growth: '+3.6% today' },
+      { title: 'Revenue', value: '$24,300', growth: '+12.5% this month' },
+    ])
+    const chartSeries = ref<ApexAxisChartSeries>([
+      {
+        name: 'Visits',
+        data: [120, 140, 110, 180, 165, 210, 230],
+      },
+    ])
+    const chartOptions = ref<ApexOptions>({
+      chart: {
+        toolbar: { show: false },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+        width: 3,
+      },
+      colors: ['#2F2FE4'],
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.4,
+          opacityTo: 0.08,
+          stops: [0, 90, 100],
         },
       },
+      grid: {
+        borderColor: '#E9ECF8',
+      },
+      xaxis: {
+        categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      },
+    })
+
+    return {
+      summaryCards,
+      chartSeries,
+      chartOptions,
     }
   },
 })

@@ -11,5 +11,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'AppRoot',
+  setup() {
+    return {}
+  },
 })
 </script>

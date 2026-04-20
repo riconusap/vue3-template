@@ -51,8 +51,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import type { RouteLocationMatched } from 'vue-router'
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter, type RouteLocationMatched } from 'vue-router'
 import AppHeader, { type BreadcrumbItem } from '../components/AppHeader.vue'
 import AppSidebar from '../components/AppSidebar.vue'
 import { useAppStore } from '../stores/app'
@@ -69,79 +69,97 @@ export default defineComponent({
     AppHeader,
     AppSidebar,
   },
-  data() {
+  setup() {
     const appStore = useAppStore()
     const authStore = useAuthStore()
+    const route = useRoute()
+    const router = useRouter()
+    const viewportWidth = ref(window.innerWidth)
+    const isMobileSidebarOpen = ref(false)
+
+    const handleResize = (): void => {
+      viewportWidth.value = window.innerWidth
+    }
+
+    const isMobileView = computed((): boolean => viewportWidth.value <= 992)
+
+    const sidebarWidth = computed((): string => {
+      if (isMobileView.value) {
+        return '260px'
+      }
+
+      return appStore.isSidebarCollapsed ? '64px' : '250px'
+    })
+
+    const activePath = computed((): string => route.path)
+
+    const breadcrumbs = computed((): BreadcrumbItem[] => {
+      const currentRoute = route.matched[route.matched.length - 1] as
+        | (RouteLocationMatched & { meta: RouteMeta })
+        | undefined
+      return currentRoute?.meta?.breadcrumbs ?? [{ label: 'Dashboard' }]
+    })
+
+    const userName = computed((): string => authStore.session?.name ?? 'Guest')
+    const userRole = computed((): string => authStore.session?.role ?? 'User')
+
+    const closeMobileSidebar = (): void => {
+      isMobileSidebarOpen.value = false
+    }
+
+    const toggleSidebar = (): void => {
+      if (isMobileView.value) {
+        isMobileSidebarOpen.value = !isMobileSidebarOpen.value
+        return
+      }
+
+      appStore.toggleSidebar()
+    }
+
+    const signOut = (): void => {
+      closeMobileSidebar()
+      authStore.signOut()
+      void router.push('/auth/sign-in')
+    }
+
+    watch(
+      () => route.path,
+      () => {
+        closeMobileSidebar()
+      },
+    )
+
+    watch(isMobileView, (isMobile) => {
+      if (!isMobile) {
+        isMobileSidebarOpen.value = false
+      }
+    })
+
+    onMounted(() => {
+      window.addEventListener('resize', handleResize)
+      handleResize()
+    })
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', handleResize)
+    })
 
     return {
       appStore,
       authStore,
-      viewportWidth: window.innerWidth,
-      isMobileSidebarOpen: false,
+      viewportWidth,
+      isMobileSidebarOpen,
+      isMobileView,
+      sidebarWidth,
+      activePath,
+      breadcrumbs,
+      userName,
+      userRole,
+      handleResize,
+      toggleSidebar,
+      closeMobileSidebar,
+      signOut,
     }
-  },
-  mounted() {
-    window.addEventListener('resize', this.handleResize)
-    this.handleResize()
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.handleResize)
-  },
-  computed: {
-    isMobileView(): boolean {
-      return this.viewportWidth <= 992
-    },
-    sidebarWidth(): string {
-      if (this.isMobileView) {
-        return '260px'
-      }
-      return this.appStore.isSidebarCollapsed ? '64px' : '250px'
-    },
-    activePath(): string {
-      return this.$route.path
-    },
-    breadcrumbs(): BreadcrumbItem[] {
-      const currentRoute = this.$route.matched[this.$route.matched.length - 1] as
-        | (RouteLocationMatched & { meta: RouteMeta })
-        | undefined
-      return currentRoute?.meta?.breadcrumbs ?? [{ label: 'Dashboard' }]
-    },
-    userName(): string {
-      return this.authStore.session?.name ?? 'Guest'
-    },
-    userRole(): string {
-      return this.authStore.session?.role ?? 'User'
-    },
-  },
-  watch: {
-    '$route.path'() {
-      this.closeMobileSidebar()
-    },
-    isMobileView(isMobile) {
-      if (!isMobile) {
-        this.isMobileSidebarOpen = false
-      }
-    },
-  },
-  methods: {
-    handleResize(): void {
-      this.viewportWidth = window.innerWidth
-    },
-    toggleSidebar(): void {
-      if (this.isMobileView) {
-        this.isMobileSidebarOpen = !this.isMobileSidebarOpen
-        return
-      }
-      this.appStore.toggleSidebar()
-    },
-    closeMobileSidebar(): void {
-      this.isMobileSidebarOpen = false
-    },
-    signOut(): void {
-      this.closeMobileSidebar()
-      this.authStore.signOut()
-      void this.$router.push('/auth/sign-in')
-    },
   },
 })
 </script>
