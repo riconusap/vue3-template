@@ -1,0 +1,77 @@
+@import './element-overrides.css';
+
+:root {
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1f2a44;
+  background-color: #f5f7ff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+.auth-title {
+  margin: 0;
+  color: #162e93;
+}
+
+.auth-subtitle {
+  margin: 8px 0 22px;
+  color: #6f778a;
+}
+
+.auth-button {
+  width: 100%;
+}
+
+.auth-switch {
+  margin: 16px 0 0;
+  color: #6f778a;
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.25s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.sidebar-slide-enter-active,
+.sidebar-slide-leave-active {
+  transition: all 0.2s ease;
+}
+
+.sidebar-slide-enter-from,
+.sidebar-slide-leave-to {
+  opacity: 0.9;
+}
+
+@media (max-width: 992px) {
+  .app-main {
+    padding: 12px;
+  }
+
+  .app-header {
+    padding: 0 12px;
+  }
+
+  .profile-role {
+    display: none;
+  }
+}

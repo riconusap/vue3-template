@@ -1,0 +1,110 @@
+<template>
+  <section>
+    <el-card>
+      <template #header>
+        <div class="section-header">
+          <h3>Users</h3>
+          <el-button type="primary">Add User</el-button>
+        </div>
+      </template>
+
+      <el-table :data="pagedUsers" stripe>
+        <el-table-column prop="name" label="Name" min-width="180" />
+        <el-table-column prop="email" label="Email" min-width="220" />
+        <el-table-column prop="role" label="Role" min-width="140" />
+        <el-table-column prop="status" label="Status" min-width="120" />
+        <el-table-column label="Actions" width="170" fixed="right">
+          <template #default>
+            <el-space>
+              <el-button type="primary" link>
+                <font-awesome-icon :icon="['fas', 'eye']" />
+              </el-button>
+              <el-button type="primary" link>
+                <font-awesome-icon :icon="['fas', 'pen-to-square']" />
+              </el-button>
+              <el-button type="danger" link>
+                <font-awesome-icon :icon="['fas', 'trash']" />
+              </el-button>
+            </el-space>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pagination-wrap">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="users.length"
+          :page-size="pageSize"
+          :current-page="currentPage"
+          @current-change="handlePageChange"
+        />
+      </div>
+    </el-card>
+  </section>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+interface UserRecord {
+  id: number
+  name: string
+  email: string
+  role: string
+  status: 'Active' | 'Inactive'
+}
+
+interface ViewState {
+  users: UserRecord[]
+  currentPage: number
+  pageSize: number
+}
+
+export default defineComponent({
+  name: 'UserManagement',
+  data(): ViewState {
+    return {
+      users: [
+        { id: 1, name: 'Nadia Putri', email: 'nadia@company.com', role: 'Admin', status: 'Active' },
+        { id: 2, name: 'Rafi Akbar', email: 'rafi@company.com', role: 'Editor', status: 'Active' },
+        { id: 3, name: 'Sinta K.', email: 'sinta@company.com', role: 'Viewer', status: 'Inactive' },
+        { id: 4, name: 'Kevin Hartono', email: 'kevin@company.com', role: 'Editor', status: 'Active' },
+        { id: 5, name: 'Rina Adelia', email: 'rina@company.com', role: 'Admin', status: 'Active' },
+        { id: 6, name: 'Dimas Yoga', email: 'dimas@company.com', role: 'Viewer', status: 'Inactive' },
+      ],
+      currentPage: 1,
+      pageSize: 5,
+    }
+  },
+  computed: {
+    pagedUsers(): UserRecord[] {
+      const start = (this.currentPage - 1) * this.pageSize
+      return this.users.slice(start, start + this.pageSize)
+    },
+  },
+  methods: {
+    handlePageChange(page: number): void {
+      this.currentPage = page
+    },
+  },
+})
+</script>
+
+<style scoped>
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-header h3 {
+  margin: 0;
+}
+
+.pagination-wrap {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+</style>
