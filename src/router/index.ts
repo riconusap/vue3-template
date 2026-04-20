@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-import AuthLayout from '../layouts/AuthLayout.vue'
-import DefaultLayout from '../layouts/DefaultLayout.vue'
-import Dashboard from '../views/Dashboard.vue'
-import MenuManagement from '../views/management/MenuManagement.vue'
-import RoleManagement from '../views/management/RoleManagement.vue'
-import UserManagement from '../views/management/UserManagement.vue'
-import SignIn from '../views/auth/SignIn.vue'
-import SignUp from '../views/auth/SignUp.vue'
+import AuthLayout from '@/layouts/AuthLayout.vue'
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import Dashboard from '@/views/Dashboard.vue'
+import MenuManagement from '@/views/management/MenuManagement.vue'
+import RoleManagement from '@/views/management/RoleManagement.vue'
+import UserManagement from '@/views/management/UserManagement.vue'
+import SignIn from '@/views/auth/SignIn.vue'
+import SignUp from '@/views/auth/SignUp.vue'
 
 interface BreadcrumbItem {
   label: string

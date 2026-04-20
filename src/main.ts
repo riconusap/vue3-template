@@ -12,8 +12,8 @@ import {
 	faUserCircle,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import App from './App.vue'
-import router from './router'
+import App from '@/App.vue'
+import router from '@/router'
 import './styles/index.css'
 
 library.add(faBars, faEye, faPenToSquare, faTrash, faUserCircle)

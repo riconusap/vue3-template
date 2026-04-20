@@ -53,10 +53,10 @@
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter, type RouteLocationMatched } from 'vue-router'
-import AppHeader, { type BreadcrumbItem } from '../components/AppHeader.vue'
-import AppSidebar from '../components/AppSidebar.vue'
-import { useAppStore } from '../stores/app'
-import { useAuthStore } from '../stores/auth'
+import AppHeader, { type BreadcrumbItem } from '@/components/AppHeader.vue'
+import AppSidebar from '@/components/AppSidebar.vue'
+import { useAppStore } from '@/stores/app'
+import { useAuthStore } from '@/stores/auth'
 
 interface RouteMeta {
   title?: string
