@@ -1,6 +1,6 @@
 <template>
-  <section>
-    <el-card>
+  <section class="section-content">
+    <el-card class="floating-card">
       <template #header>
         <div class="section-header">
           <h3>Menus</h3>
@@ -8,7 +8,7 @@
         </div>
       </template>
 
-      <el-table :data="pagedMenus" stripe>
+      <el-table class="floating-table" :data="pagedMenus" stripe>
         <el-table-column prop="label" label="Label" min-width="180" />
         <el-table-column prop="route" label="Route" min-width="180" />
         <el-table-column prop="icon" label="Icon" min-width="120" />

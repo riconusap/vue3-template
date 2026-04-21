@@ -2,8 +2,8 @@
 
 :root {
   font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #1f2a44;
-  background-color: #f5f7ff;
+  color: var(--el-text-color-primary);
+  background-color: var(--app-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -24,12 +24,12 @@ body,
 
 .auth-title {
   margin: 0;
-  color: #162e93;
+  color: var(--el-color-primary);
 }
 
 .auth-subtitle {
   margin: 8px 0 22px;
-  color: #6f778a;
+  color: var(--el-text-color-secondary);
 }
 
 .auth-button {
@@ -38,7 +38,7 @@ body,
 
 .auth-switch {
   margin: 16px 0 0;
-  color: #6f778a;
+  color: var(--el-text-color-secondary);
 }
 
 .fade-slide-enter-active,
@@ -62,6 +62,10 @@ body,
   opacity: 0.9;
 }
 
+.section-content {
+  background: var(--app-surface);
+}
+
 @media (max-width: 992px) {
   .app-main {
     padding: 12px;
@@ -75,3 +79,4 @@ body,
     display: none;
   }
 }
+

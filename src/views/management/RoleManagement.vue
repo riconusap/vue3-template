@@ -1,6 +1,6 @@
 <template>
-  <section>
-    <el-card>
+  <section class="section-content">
+    <el-card class="floating-card">
       <template #header>
         <div class="section-header">
           <h3>Roles</h3>
@@ -8,7 +8,7 @@
         </div>
       </template>
 
-      <el-table :data="pagedRoles" stripe>
+      <el-table class="floating-table" :data="pagedRoles" stripe>
         <el-table-column prop="name" label="Role Name" min-width="180" />
         <el-table-column prop="permissions" label="Permissions" min-width="260" />
         <el-table-column prop="users" label="Users" min-width="100" />

@@ -9,26 +9,38 @@
     text-color="#E8EAFE"
     active-text-color="#FFFFFF"
   >
-    <el-menu-item index="/dashboard">
-      <el-icon><House /></el-icon>
-      <template #title>Dashboard</template>
-    </el-menu-item>
+    <template v-for="menu in menuItems" :key="menu.index">
+      <el-sub-menu v-if="menu.children" :index="menu.index">
+        <template #title>
+          <el-icon v-if="menu.icon"><component :is="menu.icon" /></el-icon>
+          <span>{{ menu.label }}</span>
+        </template>
+        <el-menu-item v-for="child in menu.children" :key="child.index" :index="child.index">
+          {{ child.label }}
+        </el-menu-item>
+      </el-sub-menu>
 
-    <el-sub-menu index="management-root">
-      <template #title>
-        <el-icon><Setting /></el-icon>
-        <span>Management</span>
-      </template>
-      <el-menu-item index="/users">Users</el-menu-item>
-      <el-menu-item index="/menus">Menus</el-menu-item>
-      <el-menu-item index="/roles">Roles</el-menu-item>
-    </el-sub-menu>
+      <el-menu-item v-else :index="menu.index">
+        <el-icon v-if="menu.icon"><component :is="menu.icon" /></el-icon>
+        <template #title>{{ menu.label }}</template>
+      </el-menu-item>
+    </template>
   </el-menu>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { House, Setting } from '@element-plus/icons-vue'
+
+interface SidebarMenuItem {
+  index: string
+  label: string
+  icon?: unknown
+  children?: Array<{
+    index: string
+    label: string
+  }>
+}
 
 export default defineComponent({
   name: 'AppSidebar',
@@ -47,7 +59,27 @@ export default defineComponent({
     },
   },
   setup() {
-    return {}
+    const menuItems: SidebarMenuItem[] = [
+      {
+        index: '/dashboard',
+        label: 'Dashboard',
+        icon: House,
+      },
+      {
+        index: 'management-root',
+        label: 'Management',
+        icon: Setting,
+        children: [
+          { index: '/users', label: 'Users' },
+          { index: '/menus', label: 'Menus' },
+          { index: '/roles', label: 'Roles' },
+        ],
+      },
+    ]
+
+    return {
+      menuItems,
+    }
   },
 })
 </script>

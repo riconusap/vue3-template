@@ -16,6 +16,14 @@
     </div>
 
     <div class="app-header-right">
+      <el-tooltip :content="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'" placement="bottom">
+        <el-button circle class="theme-toggle" @click="handleToggleTheme">
+          <el-icon>
+            <Sunny v-if="isDarkMode" />
+            <Moon v-else />
+          </el-icon>
+        </el-button>
+      </el-tooltip>
       <el-dropdown>
         <div class="profile-trigger">
           <font-awesome-icon :icon="['fas', 'user-circle']" size="lg" />
@@ -36,6 +44,7 @@
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue'
+import { Moon, Sunny } from '@element-plus/icons-vue'
 
 export interface BreadcrumbItem {
   label: string
@@ -44,7 +53,11 @@ export interface BreadcrumbItem {
 
 export default defineComponent({
   name: 'AppHeader',
-  emits: ['toggle-sidebar', 'sign-out'],
+  components: {
+    Moon,
+    Sunny,
+  },
+  emits: ['toggle-sidebar', 'toggle-theme', 'sign-out'],
   props: {
     breadcrumbs: {
       type: Array as PropType<BreadcrumbItem[]>,
@@ -58,6 +71,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    isDarkMode: {
+      type: Boolean,
+      required: true,
+    },
   },
   setup(_props, { emit }) {
     const handleToggleSidebar = (): void => {
@@ -68,8 +85,13 @@ export default defineComponent({
       emit('sign-out')
     }
 
+    const handleToggleTheme = (): void => {
+      emit('toggle-theme')
+    }
+
     return {
       handleToggleSidebar,
+      handleToggleTheme,
       handleSignOut,
     }
   },
@@ -84,10 +106,22 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ffffff;
-  border: 1px solid #e8ebf3;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
   border-radius: 18px;
-  box-shadow: 0 10px 20px rgba(22, 46, 147, 0.1);
+  box-shadow: var(--app-shadow-soft);
+}
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-toggle {
+  border-color: var(--app-border);
+  background: var(--app-surface);
+  color: var(--el-text-color-primary);
 }
 
 @media (max-width: 992px) {
@@ -114,7 +148,7 @@ export default defineComponent({
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  color: #162e93;
+  color: var(--el-color-primary);
 }
 
 .profile-name,
@@ -125,12 +159,12 @@ export default defineComponent({
 
 .profile-name {
   font-weight: 700;
-  color: #1f2a44;
+  color: var(--el-text-color-primary);
 }
 
 .profile-role {
   font-size: 12px;
-  color: #6f778a;
+  color: var(--el-text-color-secondary);
 }
 
 @media (max-width: 768px) {

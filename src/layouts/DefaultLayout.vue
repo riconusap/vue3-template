@@ -31,7 +31,9 @@
         :breadcrumbs="breadcrumbs"
         :user-name="userName"
         :user-role="userRole"
+        :is-dark-mode="isDarkMode"
         @toggle-sidebar="toggleSidebar"
+        @toggle-theme="toggleTheme"
         @sign-out="signOut"
       />
 
@@ -102,6 +104,7 @@ export default defineComponent({
 
     const userName = computed((): string => authStore.session?.name ?? 'Guest')
     const userRole = computed((): string => authStore.session?.role ?? 'User')
+    const isDarkMode = computed((): boolean => appStore.theme === 'dark')
 
     const closeMobileSidebar = (): void => {
       isMobileSidebarOpen.value = false
@@ -122,6 +125,10 @@ export default defineComponent({
       void router.push('/auth/sign-in')
     }
 
+    const toggleTheme = (): void => {
+      appStore.toggleTheme()
+    }
+
     watch(
       () => route.path,
       () => {
@@ -136,6 +143,7 @@ export default defineComponent({
     })
 
     onMounted(() => {
+      appStore.initializeTheme()
       window.addEventListener('resize', handleResize)
       handleResize()
     })
@@ -155,8 +163,10 @@ export default defineComponent({
       breadcrumbs,
       userName,
       userRole,
+      isDarkMode,
       handleResize,
       toggleSidebar,
+      toggleTheme,
       closeMobileSidebar,
       signOut,
     }
@@ -235,10 +245,10 @@ export default defineComponent({
 .app-main {
   padding: 20px;
   margin: 12px 12px 12px 0;
-  background: #f5f7ff;
-  border: 1px solid #e8ebf3;
+  background: var(--app-bg);
+  border: 1px solid var(--app-border);
   border-radius: 18px;
-  box-shadow: 0 10px 20px rgba(22, 46, 147, 0.08);
+  box-shadow: var(--app-shadow-soft);
   overflow: hidden;
   display: flex;
   flex: 1;
@@ -250,17 +260,22 @@ export default defineComponent({
   height: 100%;
 }
 
+.app-main :deep(.el-scrollbar__wrap),
+.app-main :deep(.el-scrollbar__view) {
+  background: transparent;
+}
+
 .app-footer {
   height: 56px;
   margin: 0 12px 12px 0;
-  background: #ffffff;
-  border: 1px solid #e8ebf3;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
   border-radius: 18px;
-  box-shadow: 0 10px 20px rgba(22, 46, 147, 0.08);
+  box-shadow: var(--app-shadow-soft);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6f778a;
+  color: var(--el-text-color-secondary);
   font-size: 14px;
 }
 

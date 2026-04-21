@@ -2,6 +2,17 @@
   --app-color-primary: #2f2fe4;
   --app-color-secondary: #162e93;
 
+  --app-bg: #f5f7ff;
+  --app-surface: #ffffff;
+  --app-surface-alt: #f8faff;
+  --app-border: #e5e7eb;
+  --app-border-soft: #f1f5f9;
+  --app-text-main: #1f2a44;
+  --app-text-muted: #6f778a;
+  --app-shadow-soft: 0 18px 38px -28px rgba(15, 23, 42, 0.6);
+  --app-shadow-primary: 0 8px 18px -12px rgba(47, 47, 228, 0.75);
+  --app-scrollbar-thumb: #0558ff;
+
   --el-color-primary: var(--app-color-primary);
   --el-color-primary-light-3: #6666eb;
   --el-color-primary-light-5: #8c8cf1;
@@ -9,4 +20,146 @@
   --el-color-primary-light-8: #c5c5fa;
   --el-color-primary-light-9: #d8d8fc;
   --el-color-primary-dark-2: #2626b6;
+
+  --el-bg-color: var(--app-surface);
+  --el-bg-color-page: var(--app-bg);
+  --el-bg-color-overlay: var(--app-surface);
+  --el-fill-color-blank: var(--app-surface);
+  --el-border-color: var(--app-border);
+  --el-border-color-light: var(--app-border);
+  --el-text-color-primary: var(--app-text-main);
+  --el-text-color-regular: var(--app-text-main);
+  --el-text-color-secondary: var(--app-text-muted);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --app-bg: #0f172a;
+    --app-surface: #111b2e;
+    --app-surface-alt: #15233a;
+    --app-border: #24344f;
+    --app-border-soft: #2e3f5f;
+    --app-text-main: #e7ecff;
+    --app-text-muted: #9caacb;
+    --app-shadow-soft: 0 20px 44px -30px rgba(2, 8, 23, 0.95);
+    --app-shadow-primary: 0 10px 24px -14px rgba(102, 102, 235, 0.8);
+    --app-scrollbar-thumb: #8c8cf1;
+
+    --el-color-primary: #8c8cf1;
+    --el-color-primary-light-3: #a4a4f4;
+    --el-color-primary-light-5: #bdbdf7;
+    --el-color-primary-light-7: #d5d5fa;
+    --el-color-primary-light-8: #e1e1fc;
+    --el-color-primary-light-9: #ececfd;
+    --el-color-primary-dark-2: #6666eb;
+
+    --el-bg-color: var(--app-surface);
+    --el-bg-color-page: var(--app-bg);
+    --el-bg-color-overlay: #17243a;
+    --el-fill-color-blank: var(--app-surface);
+    --el-border-color: var(--app-border);
+    --el-border-color-light: var(--app-border-soft);
+    --el-text-color-primary: var(--app-text-main);
+    --el-text-color-regular: var(--app-text-main);
+    --el-text-color-secondary: var(--app-text-muted);
+    --el-text-color-placeholder: #8191b2;
+  }
+}
+
+:root[data-theme='dark'] {
+  --app-bg: #0f172a;
+  --app-surface: #111b2e;
+  --app-surface-alt: #15233a;
+  --app-border: #24344f;
+  --app-border-soft: #2e3f5f;
+  --app-text-main: #e7ecff;
+  --app-text-muted: #9caacb;
+  --app-shadow-soft: 0 20px 44px -30px rgba(2, 8, 23, 0.95);
+  --app-shadow-primary: 0 10px 24px -14px rgba(102, 102, 235, 0.8);
+  --app-scrollbar-thumb: #8c8cf1;
+
+  --el-color-primary: #8c8cf1;
+  --el-color-primary-light-3: #a4a4f4;
+  --el-color-primary-light-5: #bdbdf7;
+  --el-color-primary-light-7: #d5d5fa;
+  --el-color-primary-light-8: #e1e1fc;
+  --el-color-primary-light-9: #ececfd;
+  --el-color-primary-dark-2: #6666eb;
+
+  --el-bg-color: var(--app-surface);
+  --el-bg-color-page: var(--app-bg);
+  --el-bg-color-overlay: #17243a;
+  --el-fill-color-blank: var(--app-surface);
+  --el-border-color: var(--app-border);
+  --el-border-color-light: var(--app-border-soft);
+  --el-text-color-primary: var(--app-text-main);
+  --el-text-color-regular: var(--app-text-main);
+  --el-text-color-secondary: var(--app-text-muted);
+  --el-text-color-placeholder: #8191b2;
+}
+
+.floating-table {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  --el-table-bg-color: var(--app-surface);
+  --el-table-tr-bg-color: var(--app-surface);
+  --el-table-row-hover-bg-color: var(--app-surface-alt);
+  --el-table-current-row-bg-color: var(--app-surface-alt);
+  --el-fill-color-lighter: var(--app-surface-alt);
+  --el-table-header-bg-color: var(--app-surface);
+  --el-table-header-text-color: var(--el-text-color-secondary);
+  --el-table-text-color: var(--el-text-color-regular);
+  --el-table-border-color: var(--app-border);
+}
+
+.floating-table .el-table__inner-wrapper {
+  border-radius: inherit;
+}
+
+.floating-table::before {
+  display: none;
+}
+
+.floating-card {
+  border-radius: 16px;
+  border: 1px solid var(--app-border);
+  box-shadow: var(--app-shadow-soft);
+}
+
+.floating-card .el-card__header {
+  border-bottom: 1px solid var(--app-border-soft);
+}
+
+.el-pagination.is-background .btn-prev,
+.el-pagination.is-background .btn-next,
+.el-pagination.is-background .el-pager li {
+  border-radius: 10px;
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+  color: var(--el-text-color-regular);
+}
+
+.el-pagination.is-background .btn-prev:disabled,
+.el-pagination.is-background .btn-next:disabled {
+  color: var(--el-text-color-placeholder);
+  background: var(--app-surface-alt);
+}
+
+.el-pagination.is-background .el-pager li:hover,
+.el-pagination.is-background .btn-prev:hover,
+.el-pagination.is-background .btn-next:hover {
+  color: var(--el-color-primary);
+}
+
+.el-scrollbar {
+  --el-scrollbar-bg-color: var(--app-scrollbar-thumb) !important;
+}
+
+.el-pagination.is-background .el-pager li.is-active {
+  color: #ffffff;
+  background: var(--el-color-primary);
+  border-color: var(--el-color-primary);
+  box-shadow: var(--app-shadow-primary);
 }
