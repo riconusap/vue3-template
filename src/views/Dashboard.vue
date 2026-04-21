@@ -1,143 +1,190 @@
 <template>
-  <section class="dashboard-view">
-    <el-row :gutter="16" class="summary-grid">
-      <el-col :xs="24" :sm="12" :md="8" :lg="8" v-for="item in summaryCards" :key="item.title">
-        <el-card shadow="hover" class="summary-card">
-          <p class="summary-label">{{ item.title }}</p>
-          <h3 class="summary-value">{{ item.value }}</h3>
-          <p class="summary-growth">{{ item.growth }}</p>
-        </el-card>
-      </el-col>
-    </el-row>
+  <div class="welcome-row">
+    <el-avatar :size="56" class="welcome-avatar">{{ userInitials }}</el-avatar>
 
-    <el-card class="chart-card">
-      <template #header>
-        <div class="chart-title">Traffic Overview</div>
-      </template>
-      <apexchart type="area" height="360" :options="chartOptions" :series="chartSeries" />
-    </el-card>
+    <div class="welcome-copy">
+      <h1 class="welcome-line">
+        Welcome, <strong>{{ userProfile.name }}</strong> 👋
+      </h1>
+      <p class="welcome-meta">
+        {{ userProfile.position }} • {{ currentDateLabel }}
+        <span class="welcome-time is-number">{{ currentTimeLabel }}</span>
+      </p>
+    </div>
+  </div>
+  <div class="dashboard-spacer"></div>
+  <section class="dashboard-content section-content">
+
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import type { ApexAxisChartSeries, ApexOptions } from 'apexcharts'
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
-interface SummaryCard {
-  title: string
-  value: string
-  growth: string
+interface UserProfile {
+  name: string
+  email: string
+  position: string
+  placement: string
+  photoUrl: string
 }
 
 export default defineComponent({
   name: 'Dashboard',
   setup() {
-    const summaryCards = ref<SummaryCard[]>([
-      { title: 'Total Users', value: '1,284', growth: '+8.2% this month' },
-      { title: 'Active Sessions', value: '392', growth: '+3.6% today' },
-      { title: 'Revenue', value: '$24,300', growth: '+12.5% this month' },
-    ])
-    const chartSeries = ref<ApexAxisChartSeries>([
-      {
-        name: 'Visits',
-        data: [120, 140, 110, 180, 165, 210, 230],
-      },
-    ])
-    const chartOptions = ref<ApexOptions>({
-      chart: {
-        toolbar: { show: false },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: 'smooth',
-        width: 3,
-      },
-      colors: ['#2F2FE4'],
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.4,
-          opacityTo: 0.08,
-          stops: [0, 90, 100],
-        },
-      },
-      grid: {
-        borderColor: '#E9ECF8',
-      },
-      xaxis: {
-        categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      },
+    const authStore = useAuthStore()
+    const currentTime = ref(new Date())
+    let clockTimer: number | undefined
+
+    const userProfile = computed<UserProfile>(() => {
+      const session = authStore.session
+      const fullName = session?.name ?? 'Guest'
+      return {
+        name: fullName,
+        email: session?.email ?? '-',
+        position: session?.role ?? 'Staff',
+        placement: 'Head Office Jakarta',
+        photoUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=2f2fe4&color=ffffff`,
+      }
+    })
+
+    const currentTimeLabel = computed((): string => {
+      return currentTime.value.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      })
+    })
+
+    const currentDateLabel = computed((): string => {
+      return currentTime.value.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    })
+
+    const userInitials = computed((): string => {
+      return userProfile.value.name
+        .split(' ')
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() ?? '')
+        .join('')
+    })
+
+    onMounted(() => {
+      clockTimer = window.setInterval(() => {
+        currentTime.value = new Date()
+      }, 1000)
+    })
+
+    onBeforeUnmount(() => {
+      if (clockTimer) {
+        window.clearInterval(clockTimer)
+      }
     })
 
     return {
-      summaryCards,
-      chartSeries,
-      chartOptions,
+      userProfile,
+      userInitials,
+      currentTimeLabel,
+      currentDateLabel,
     }
   },
 })
 </script>
 
 <style scoped>
-.dashboard-view {
-  display: grid;
-  gap: 18px;
+.dashboard-content {
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
 }
 
-.summary-grid {
+.welcome-card {
   width: 100%;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
 }
 
-.summary-grid :deep(.el-col) {
-  min-width: 0;
+.welcome-card :deep(.el-card__body) {
+  padding: 16px 18px;
 }
 
-.summary-card {
-  border-radius: 12px;
+.welcome-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.summary-label {
-  margin: 0;
-  color: #6f778a;
-  font-size: 14px;
-}
-
-.summary-value {
-  margin: 8px 0;
-  color: #172c91;
-  font-size: 28px;
-}
-
-.summary-growth {
-  margin: 0;
-  color: #2f8f46;
-  font-size: 13px;
-}
-
-.chart-card {
-  border-radius: 12px;
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.chart-card :deep(.apexcharts-canvas),
-.chart-card :deep(.apexcharts-svg) {
-  max-width: 100% !important;
-}
-
-.chart-title {
+.welcome-avatar {
+  flex-shrink: 0;
+  background: linear-gradient(145deg, var(--el-color-primary), color-mix(in srgb, var(--el-color-primary-dark-2) 78%, #1f2a44));
+  color: #ffffff;
   font-weight: 700;
-  color: #1f2a44;
+}
+
+.welcome-copy {
+  min-width: 0;
+}
+
+.welcome-line {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--el-text-color-primary);
+}
+
+.welcome-line strong {
+  font-weight: 800;
+}
+
+.welcome-meta {
+  margin: 6px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--el-text-color-secondary);
+}
+
+.welcome-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--app-surface-alt) 88%, var(--app-surface));
+  border: 1px solid var(--app-border-soft);
+}
+
+.dashboard-spacer {
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 1100px) {
+  .welcome-line {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .welcome-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-content {
+    padding-bottom: 8px;
+  }
+
+  .welcome-meta {
+    gap: 8px;
+  }
 }
 </style>

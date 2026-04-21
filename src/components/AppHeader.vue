@@ -100,16 +100,20 @@ export default defineComponent({
 
 <style scoped>
 .app-header {
+  position: sticky;
+  top: 12px;
+  z-index: 25;
   height: 64px;
   padding: 0 20px;
   margin: 12px 12px 0 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--app-surface);
+  background: color-mix(in srgb, var(--app-surface) 90%, transparent);
   border: 1px solid var(--app-border);
   border-radius: 18px;
   box-shadow: var(--app-shadow-soft);
+  backdrop-filter: blur(10px);
 }
 
 .app-header-right {
@@ -126,6 +130,7 @@ export default defineComponent({
 
 @media (max-width: 992px) {
   .app-header {
+    top: 8px;
     margin: 8px 8px 0;
     padding: 0 12px;
     border-radius: 14px;

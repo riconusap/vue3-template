@@ -176,7 +176,9 @@ export default defineComponent({
 
 .sign-in-shell {
   min-height: 520px;
-  background: #ffffff;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  box-shadow: var(--app-shadow-soft);
 }
 
 .sign-in-side {
@@ -231,7 +233,7 @@ export default defineComponent({
 }
 
 .sign-in-main {
-  background: #ffffff;
+  background: var(--app-surface);
 }
 
 .main-content {
@@ -248,20 +250,20 @@ export default defineComponent({
 
 .main-badge {
   margin: 0 0 10px;
-  color: #2f2fe4;
+  color: var(--app-color-primary);
   font-weight: 600;
   font-size: 13px;
 }
 
 .main-header h1 {
   margin: 0;
-  color: #18233d;
+  color: var(--app-text-main);
   font-size: 30px;
 }
 
 .main-header p {
   margin: 8px 0 0;
-  color: #697286;
+  color: var(--app-text-muted);
 }
 
 .form-meta {
@@ -273,7 +275,7 @@ export default defineComponent({
 
 .form-meta a {
   font-size: 13px;
-  color: #2f2fe4;
+  color: var(--app-color-primary);
   text-decoration: none;
   font-weight: 500;
 }
@@ -285,13 +287,58 @@ export default defineComponent({
 
 .main-switch {
   margin: 18px 0 0;
-  color: #697286;
+  color: var(--app-text-muted);
 }
 
 .main-switch a {
-  color: #2f2fe4;
+  color: var(--app-color-primary);
   text-decoration: none;
   font-weight: 600;
+}
+
+:deep(.el-form-item__label) {
+  color: var(--app-text-main);
+}
+
+:deep(.el-input__wrapper) {
+  border-radius: 14px;
+  background: var(--app-surface-alt);
+  box-shadow: 0 0 0 1px var(--app-border) inset;
+}
+
+:deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 1px var(--app-color-primary) inset;
+}
+
+:deep(.el-input__inner) {
+  color: var(--app-text-main);
+}
+
+:deep(.el-input__inner::placeholder) {
+  color: var(--app-text-muted);
+}
+
+:deep(.el-checkbox__label) {
+  color: var(--app-text-muted);
+}
+
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: var(--app-color-primary);
+  border-color: var(--app-color-primary);
+}
+
+:global(:root[data-theme='dark']) .sign-in-shell {
+  background: rgba(17, 27, 46, 0.86);
+}
+
+:global(:root[data-theme='dark']) .sign-in-side {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(140, 140, 241, 0.24), transparent 36%),
+    linear-gradient(165deg, #0f1d4a 0%, #1d38a3 58%, #3a57ff 100%);
+}
+
+:global(:root[data-theme='dark']) .sign-in-main {
+  background: transparent;
 }
 
 @media (max-width: 992px) {

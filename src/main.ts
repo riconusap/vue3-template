@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import { createPinia } from 'pinia'
 import VueApexCharts from 'vue3-apexcharts'
 import { library } from '@fortawesome/fontawesome-svg-core'

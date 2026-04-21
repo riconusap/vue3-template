@@ -39,9 +39,9 @@
 
       <el-main class="app-main">
         <el-scrollbar>
-          <transition name="fade-slide" mode="out-in">
-            <router-view />
-          </transition>
+          <router-view />
+          <!-- <transition name="fade-slide" mode="out-in">
+          </transition> -->
         </el-scrollbar>
       </el-main>
 
@@ -176,7 +176,8 @@ export default defineComponent({
 
 <style scoped>
 .default-layout {
-  min-height: 100vh;
+  min-height: 100dvh;
+  align-items: flex-start;
 }
 
 .main-shell {
@@ -184,17 +185,24 @@ export default defineComponent({
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
 }
 
 .app-aside {
+  position: sticky;
+  top: 12px;
   background: linear-gradient(180deg, #162e93 0%, #1f3699 100%);
   transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   overflow: hidden;
   will-change: width;
   border-radius: 18px;
   margin: 12px 12px 12px 12px;
-  height: calc(100vh - 24px);
+  height: calc(100dvh - 24px);
   box-shadow: 0 14px 28px rgba(22, 46, 147, 0.24);
+  align-self: flex-start;
 }
 
 .mobile-sidebar-backdrop {
@@ -244,15 +252,16 @@ export default defineComponent({
 
 .app-main {
   padding: 20px;
-  margin: 12px 12px 12px 0;
+  margin: 0 12px 0 0;
   background: var(--app-bg);
   border: 1px solid var(--app-border);
   border-radius: 18px;
   box-shadow: var(--app-shadow-soft);
-  overflow: hidden;
+  overflow: auto;
   display: flex;
   flex: 1;
   min-height: 0;
+  height: auto;
 }
 
 .app-main :deep(.el-scrollbar) {
@@ -263,6 +272,12 @@ export default defineComponent({
 .app-main :deep(.el-scrollbar__wrap),
 .app-main :deep(.el-scrollbar__view) {
   background: transparent;
+}
+
+.app-main :deep(.el-scrollbar__view) {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-footer {
@@ -277,6 +292,7 @@ export default defineComponent({
   justify-content: center;
   color: var(--el-text-color-secondary);
   font-size: 14px;
+  flex-shrink: 0;
 }
 
 @media (max-width: 992px) {
@@ -320,6 +336,8 @@ export default defineComponent({
 
   .main-shell {
     min-width: 0;
+    height: 100dvh;
+    max-height: 100dvh;
   }
 
   .app-footer {
@@ -330,7 +348,7 @@ export default defineComponent({
   }
 
   .app-main {
-    margin: 8px;
+    margin: 0 8px 8px;
     padding: 14px;
     border-radius: 14px;
   }

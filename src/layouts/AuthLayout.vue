@@ -27,9 +27,9 @@ export default defineComponent({
 .auth-layout {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 12% 20%, rgba(47, 47, 228, 0.2), transparent 36%),
-    radial-gradient(circle at 84% 90%, rgba(22, 46, 147, 0.23), transparent 34%),
-    linear-gradient(180deg, #f6f8ff 0%, #f0f3ff 100%);
+    radial-gradient(circle at 12% 20%, rgba(47, 47, 228, 0.18), transparent 36%),
+    radial-gradient(circle at 84% 90%, rgba(22, 46, 147, 0.18), transparent 34%),
+    linear-gradient(180deg, var(--app-bg) 0%, var(--app-surface-alt) 100%);
 }
 
 .auth-row {
@@ -38,10 +38,18 @@ export default defineComponent({
 
 .auth-card {
   border-radius: 16px;
-  border: 1px solid #dce3ff;
-  box-shadow: 0 24px 40px rgba(23, 44, 145, 0.12);
+  border: 1px solid var(--app-border);
+  box-shadow: var(--app-shadow-soft);
   transform-origin: center center;
   backface-visibility: hidden;
+  background: var(--app-surface);
+}
+
+:global(:root[data-theme='dark']) .auth-layout {
+  background:
+    radial-gradient(circle at 12% 20%, rgba(140, 140, 241, 0.16), transparent 36%),
+    radial-gradient(circle at 84% 90%, rgba(94, 129, 255, 0.12), transparent 34%),
+    linear-gradient(180deg, var(--app-bg) 0%, #0b1220 100%);
 }
 
 .auth-flip-enter-active,
@@ -60,6 +68,10 @@ export default defineComponent({
 .auth-flip-leave-to {
   opacity: 0;
   transform: perspective(1400px) rotateY(-92deg) scale(0.96);
+}
+
+:deep(.el-card__body) {
+  padding: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

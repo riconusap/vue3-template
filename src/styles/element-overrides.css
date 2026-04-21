@@ -30,6 +30,12 @@
   --el-text-color-primary: var(--app-text-main);
   --el-text-color-regular: var(--app-text-main);
   --el-text-color-secondary: var(--app-text-muted);
+
+  --bs-body-bg: var(--app-bg);
+  --bs-body-color: var(--app-text-main);
+  --bs-secondary-color: var(--app-text-muted);
+  --bs-border-color: var(--app-border);
+  --bs-card-bg: var(--app-surface);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -63,6 +69,12 @@
     --el-text-color-regular: var(--app-text-main);
     --el-text-color-secondary: var(--app-text-muted);
     --el-text-color-placeholder: #8191b2;
+
+    --bs-body-bg: var(--app-bg);
+    --bs-body-color: var(--app-text-main);
+    --bs-secondary-color: var(--app-text-muted);
+    --bs-border-color: var(--app-border);
+    --bs-card-bg: var(--app-surface);
   }
 }
 
@@ -96,6 +108,12 @@
   --el-text-color-regular: var(--app-text-main);
   --el-text-color-secondary: var(--app-text-muted);
   --el-text-color-placeholder: #8191b2;
+
+  --bs-body-bg: var(--app-bg);
+  --bs-body-color: var(--app-text-main);
+  --bs-secondary-color: var(--app-text-muted);
+  --bs-border-color: var(--app-border);
+  --bs-card-bg: var(--app-surface);
 }
 
 .floating-table {

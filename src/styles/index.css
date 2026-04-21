@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import './element-overrides.css';
 
 :root {
-  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--el-text-color-primary);
   background-color: var(--app-bg);
   font-synthesis: none;
@@ -20,6 +21,35 @@ body,
   margin: 0;
   width: 100%;
   min-height: 100%;
+  background-color: var(--app-bg) !important;
+  color: var(--el-text-color-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.welcome-line strong,
+.auth-title,
+.app-header,
+.panel-header h3,
+.profile-card-head h3,
+.team-strip-head h4,
+.activity-head h3 {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-weight: 800;
+}
+
+.is-number,
+.welcome-time,
+.clock-time,
+.metric-box strong,
+.profile-meta-item strong,
+.status-badge,
+.dashboard-status {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
 }
 
 .auth-title {
@@ -63,7 +93,15 @@ body,
 }
 
 .section-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   background: var(--app-surface);
+}
+
+.section-content > .el-card,
+.section-content > .floating-card {
+  width: 100%;
 }
 
 @media (max-width: 992px) {

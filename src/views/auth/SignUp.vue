@@ -290,7 +290,9 @@ export default defineComponent({
 
 .sign-up-shell {
   min-height: 520px;
-  background: #ffffff;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  box-shadow: var(--app-shadow-soft);
 }
 
 .sign-up-side {
@@ -345,7 +347,7 @@ export default defineComponent({
 }
 
 .sign-up-main {
-  background: #ffffff;
+  background: var(--app-surface);
 }
 
 .main-content {
@@ -362,26 +364,26 @@ export default defineComponent({
 
 .main-badge {
   margin: 0 0 10px;
-  color: #2f2fe4;
+  color: var(--app-color-primary);
   font-weight: 600;
   font-size: 13px;
 }
 
 .main-header h1 {
   margin: 0;
-  color: #18233d;
+  color: var(--app-text-main);
   font-size: 30px;
 }
 
 .main-header p {
   margin: 8px 0 0;
-  color: #697286;
+  color: var(--app-text-muted);
 }
 
 .form-hint {
   margin: 2px 0 14px;
   font-size: 12px;
-  color: #6f778a;
+  color: var(--app-text-muted);
 }
 
 .submit-btn {
@@ -391,11 +393,11 @@ export default defineComponent({
 
 .main-switch {
   margin: 18px 0 0;
-  color: #697286;
+  color: var(--app-text-muted);
 }
 
 .main-switch a {
-  color: #2f2fe4;
+  color: var(--app-color-primary);
   text-decoration: none;
   font-weight: 600;
 }
@@ -410,7 +412,7 @@ export default defineComponent({
   align-items: center;
   margin-bottom: 8px;
   font-size: 12px;
-  color: #6f778a;
+  color: var(--app-text-muted);
 }
 
 .strength-label {
@@ -421,7 +423,7 @@ export default defineComponent({
   width: 100%;
   height: 8px;
   border-radius: 999px;
-  background: #e8ebf6;
+  background: var(--app-surface-alt);
   overflow: hidden;
 }
 
@@ -440,42 +442,84 @@ export default defineComponent({
 
 .password-check-item {
   font-size: 11px;
-  color: #78819a;
-  border: 1px solid #d7dced;
+  color: var(--app-text-muted);
+  border: 1px solid var(--app-border);
   border-radius: 999px;
   padding: 4px 8px;
   transition: all 0.2s ease;
 }
 
 .password-check-item.passed {
-  color: #166534;
-  border-color: #9fe3b6;
-  background: #edfdf3;
+  color: #15803d;
+  border-color: rgba(21, 128, 61, 0.28);
+  background: rgba(21, 128, 61, 0.12);
 }
 
 .strength-idle {
-  color: #7d869e;
-  background: #bcc4d8;
+  color: var(--app-text-muted);
+  background: var(--app-border);
 }
 
 .strength-weak {
-  color: #dc2626;
-  background: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.18);
 }
 
 .strength-fair {
-  color: #d97706;
-  background: #f59e0b;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.18);
 }
 
 .strength-good {
-  color: #2563eb;
-  background: #3b82f6;
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.18);
 }
 
 .strength-strong {
-  color: #047857;
-  background: #10b981;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.18);
+}
+
+:deep(.el-form-item__label) {
+  color: var(--app-text-main);
+}
+
+:deep(.el-input__wrapper) {
+  border-radius: 14px;
+  background: var(--app-surface-alt);
+  box-shadow: 0 0 0 1px var(--app-border) inset;
+}
+
+:deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 1px var(--app-color-primary) inset;
+}
+
+:deep(.el-input__inner) {
+  color: var(--app-text-main);
+}
+
+:deep(.el-input__inner::placeholder) {
+  color: var(--app-text-muted);
+}
+
+:global(:root[data-theme='dark']) .sign-up-shell {
+  background: rgba(17, 27, 46, 0.86);
+}
+
+:global(:root[data-theme='dark']) .sign-up-side {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(140, 140, 241, 0.24), transparent 36%),
+    linear-gradient(165deg, #0f1d4a 0%, #1d38a3 58%, #3a57ff 100%);
+}
+
+:global(:root[data-theme='dark']) .sign-up-main {
+  background: transparent;
+}
+
+:global(:root[data-theme='dark']) .password-check-item.passed {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.24);
 }
 
 @media (max-width: 992px) {
