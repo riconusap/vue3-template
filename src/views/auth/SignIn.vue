@@ -87,7 +87,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 interface SignInForm {
@@ -99,6 +99,7 @@ interface SignInForm {
 export default defineComponent({
   name: 'SignIn',
   setup() {
+    const route = useRoute()
     const router = useRouter()
     const authStore = useAuthStore()
     const signInFormRef = ref<FormInstance>()
@@ -144,16 +145,20 @@ export default defineComponent({
       isSubmitting.value = true
       errorMessage.value = ''
 
-      if (form.password !== 'password') {
-        isSubmitting.value = false
-        errorMessage.value = 'Incorrect credentials. For demo, use password: password'
-        return
-      }
+      try {
+        await authStore.signIn(form)
+        ElMessage.success('Signed in successfully')
 
-      authStore.signIn(form)
-      ElMessage.success('Signed in successfully')
-      isSubmitting.value = false
-      await router.push('/dashboard')
+        const redirectTarget = Array.isArray(route.query.redirect)
+          ? route.query.redirect[0]
+          : route.query.redirect
+
+        await router.push(typeof redirectTarget === 'string' && redirectTarget ? redirectTarget : '/dashboard')
+      } catch (error) {
+        errorMessage.value = error instanceof Error ? error.message : 'Login failed. Please try again.'
+      } finally {
+        isSubmitting.value = false
+      }
     }
 
     return {

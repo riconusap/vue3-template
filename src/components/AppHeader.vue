@@ -30,6 +30,7 @@
           <div>
             <p class="profile-name">{{ userName }}</p>
             <p class="profile-role">{{ userRole }}</p>
+            <p class="profile-email">{{ userEmail }}</p>
           </div>
         </div>
         <template #dropdown>
@@ -68,6 +69,10 @@ export default defineComponent({
       required: true,
     },
     userRole: {
+      type: String,
+      required: true,
+    },
+    userEmail: {
       type: String,
       required: true,
     },
@@ -157,7 +162,8 @@ export default defineComponent({
 }
 
 .profile-name,
-.profile-role {
+.profile-role,
+.profile-email {
   margin: 0;
   line-height: 1.2;
 }
@@ -170,6 +176,11 @@ export default defineComponent({
 .profile-role {
   font-size: 12px;
   color: var(--el-text-color-secondary);
+}
+
+.profile-email {
+  font-size: 11px;
+  color: var(--app-text-muted);
 }
 
 @media (max-width: 768px) {
@@ -194,6 +205,10 @@ export default defineComponent({
   }
 
   .profile-name {
+    display: none;
+  }
+
+  .profile-email {
     display: none;
   }
 

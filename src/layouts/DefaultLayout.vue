@@ -31,6 +31,7 @@
         :breadcrumbs="breadcrumbs"
         :user-name="userName"
         :user-role="userRole"
+        :user-email="userEmail"
         :is-dark-mode="isDarkMode"
         @toggle-sidebar="toggleSidebar"
         @toggle-theme="toggleTheme"
@@ -104,6 +105,7 @@ export default defineComponent({
 
     const userName = computed((): string => authStore.session?.name ?? 'Guest')
     const userRole = computed((): string => authStore.session?.role ?? 'User')
+    const userEmail = computed((): string => authStore.session?.email ?? '-')
     const isDarkMode = computed((): boolean => appStore.theme === 'dark')
 
     const closeMobileSidebar = (): void => {
@@ -121,8 +123,9 @@ export default defineComponent({
 
     const signOut = (): void => {
       closeMobileSidebar()
-      authStore.signOut()
-      void router.push('/auth/sign-in')
+      void authStore.signOut().finally(() => {
+        void router.push('/auth/sign-in')
+      })
     }
 
     const toggleTheme = (): void => {
@@ -163,6 +166,7 @@ export default defineComponent({
       breadcrumbs,
       userName,
       userRole,
+      userEmail,
       isDarkMode,
       handleResize,
       toggleSidebar,
